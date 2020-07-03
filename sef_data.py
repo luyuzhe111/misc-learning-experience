@@ -35,7 +35,7 @@ df_com.drop(columns=columns_to_drop, inplace=True)
 columns_to_drop = ['cty_pop2000', 'cz', 'cz_name', 'cz_pop2000',
                    'statename', 'state_id', 'stateabbrv', 'csa',
                    'csa_name', 'cbsa', 'cbsa_name', 'intersects_msa',
-                   'tax_st_diff_top20', 'pop_density']
+                   'tax_st_diff_top20', 'pop_d_2000_1980', 'lf_d_2000_1980']
 df_sef.drop(columns=columns_to_drop, inplace=True)
 
 # merge community char data to death rate data
