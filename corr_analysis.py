@@ -3,12 +3,24 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 import numpy as np
+from sklearn.feature_selection import SelectKBest, f_regression
 
 data = pd.read_csv('data/cleaned_data/cleaned_full_dataset.csv', index_col=0)
+data.dropna(inplace=True)
+X = data.iloc[:, 6:]
+y = data.iloc[:, 5]
 
-variables = data.iloc[:, 5:]
+X_sub = SelectKBest(f_regression, k=20).fit(X, y)
+mask = X_sub.get_support()
 
-corr = variables.corr()
+feat_chosen = []
+for chosen, feature in zip(mask, X.columns):
+    if chosen:
+        feat_chosen.append(feature)
+
+selected = data[feat_chosen]
+
+corr = selected.corr()
 mask = np.zeros_like(corr)
 mask[np.triu_indices_from(mask)] = True
 ax = sns.heatmap(
@@ -24,5 +36,9 @@ ax.set_xticklabels(
     horizontalalignment='right'
 )
 
+plt.xlabel('', fontsize=5)
+plt.ylabel('', fontsize=5)
+
 plt.tight_layout()
-plt.savefig('viz/corr', dpi=800)
+plt.savefig('viz/x_corrcoef_20', dpi=800)
+
