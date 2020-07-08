@@ -1,5 +1,5 @@
 # COVID-SocioeconomicFactors
 
-Coronavirus Visualization Team, Socioeconomic Factors Project
+Coronavirus Visualization Team: Socioeconomic Factors Project
 
 Data courtesy of USAFacts.org
