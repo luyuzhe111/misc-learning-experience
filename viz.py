@@ -57,73 +57,43 @@ def pearson_r(X, y, num_fts, out_dir):
     plt.clf()
 
 
-def kbest_by_threshold(X, y, threshold, type, out_dir, title='None'):
+def kbest_by_threshold_bar(X, y, threshold, out_dir, title='None'):
     feat_chosen = select_features(X, y, k='all')
     out_list = []
     for feature in feat_chosen:
         corr_tuple = np.corrcoef(X[feature], y)
         if abs(corr_tuple[0][1]) > abs(threshold):
             out_list.append([feature, round(corr_tuple[0][1], 2)])
-    if type == 'bar':
-        corr_df = pd.DataFrame(out_list, columns=['Features', 'Correlation'])
 
-        fig = px.bar(corr_df, x='Features', y='Correlation',
-                     hover_data=['Features', 'Correlation'],
-                     labels={'Features': 'Socioeconomic Factors'})
-        fig.update_layout(
-            title={
-                'text': title,
-                 'x': 0.5,
-            }
-        )
+    corr_df = pd.DataFrame(out_list, columns=['Features', 'Correlation'])
 
-        fig.show()
+    fig = px.bar(corr_df, x='Features', y='Correlation',
+                 hover_data=['Features', 'Correlation'],
+                 labels={'Features': 'Socioeconomic Factors'})
+    fig.update_layout(
+        title={
+            'text': title,
+             'x': 0.5,
+        }
+    )
 
-        # ax = plt.gca()
-        # ax.axhline(linewidth=2, color='lightblue')
-        # # xticks = (range(len(corr_df['Features'])))
-        # # new_xticks = [i*2 for i in xticks]
-        # # plt.bar(new_xticks, corr_df['Correlation'], align='center', width=0.6)
-        # # plt.xticks(new_xticks, corr_df['Features'], rotation=90)
-        # plt.bar(corr_df['Features'], corr_df['Correlation'], align='center', width=0.6, color='lightsteelblue')
-        # plt.xticks(rotation=90)
-        # plt.yticks(np.arange(round(min(corr_df['Correlation']), 1)-0.1,
-        #                      round(max(corr_df['Correlation']), 1) + 0.1, 0.05))
-        # plt.tight_layout()
-        # plt.title('Best Features')
-        # plt.savefig(out_dir, dpi=800, bbox_inches='tight')
-        # plt.show()
-        # plt.clf()
+    fig.show()
 
-    if type == 'matrix':
-        selected = X[feat_chosen]
-        fig = px.scatter_matrix(selected)
-        fig.show()
-        # selected = X[feat_chosen]
-        #
-        # corr = selected.corr()
-        # mask = np.zeros_like(corr)
-        # mask[np.triu_indices_from(mask)] = True
-        # ax = sns.heatmap(
-        #     corr,
-        #     vmin=-1, vmax=1, center=0,
-        #     cmap=sns.diverging_palette(20, 220, n=200),
-        #     mask=mask,
-        #     square=True
-        # )
-        # ax.set_xticklabels(
-        #     ax.get_xticklabels(),
-        #     rotation=90,
-        #     horizontalalignment='right'
-        # )
-        #
-        # plt.xlabel('', fontsize=5)
-        # plt.ylabel('', fontsize=5)
-        #
-        # plt.tight_layout()
-        # plt.savefig(out_dir, dpi=800)
-        # plt.show()
-        # plt.clf()
+    # ax = plt.gca()
+    # ax.axhline(linewidth=2, color='lightblue')
+    # # xticks = (range(len(corr_df['Features'])))
+    # # new_xticks = [i*2 for i in xticks]
+    # # plt.bar(new_xticks, corr_df['Correlation'], align='center', width=0.6)
+    # # plt.xticks(new_xticks, corr_df['Features'], rotation=90)
+    # plt.bar(corr_df['Features'], corr_df['Correlation'], align='center', width=0.6, color='lightsteelblue')
+    # plt.xticks(rotation=90)
+    # plt.yticks(np.arange(round(min(corr_df['Correlation']), 1)-0.1,
+    #                      round(max(corr_df['Correlation']), 1) + 0.1, 0.05))
+    # plt.tight_layout()
+    # plt.title('Best Features')
+    # plt.savefig(out_dir, dpi=800, bbox_inches='tight')
+    # plt.show()
+    # plt.clf()
 
 
 def corrcoef_bar(X, y, num_fts, out_dir):
