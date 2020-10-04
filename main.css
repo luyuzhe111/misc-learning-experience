@@ -1,0 +1,35 @@
+body {
+    font-family: helvetica;
+    background-color: cornsilk;
+}
+
+.header {
+    padding: 20px;
+    text-align: center;
+    background: #1abc9c;
+    color: white;
+    font-size: 30px;
+}
+
+
+ul {
+    font-family: monospace;
+}
+li {
+    list-style: circle;
+}
+  
+.list {
+    list-style: square;
+}
+
+
+
+  #observablehq-cb04c636 { white-space: nowrap; }
+  #observablehq-cb04c636 canvas {
+    float: left;
+    margin: 5px;
+  }
+
+
+
