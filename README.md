@@ -1,5 +1,7 @@
 # High Dimensional Vis Code Challenge
 
+Link to visualization code : https://observablehq.com/d/63cb8c1b032f35b1
+
 In this visualization, I am visualizing results of **applying dimensionality reduction and clustering** on the dataset of [Bob Ross painting descriptions](https://github.com/fivethirtyeight/data/tree/master/bob-ross). Each item in the data corresponds to an individual painting, and its attributes are binary (0 or 1), indicating the presence of a particular landform feature - some natural, others person-made.
 
 Specifically, I am visualizing two sets of data. 
