@@ -1,4 +1,4 @@
-# High Dimensional Vis Code Challenge
+# Interactive Contrastive Principal Component Analysis
 
 Link to visualization code : https://observablehq.com/d/63cb8c1b032f35b1
 
