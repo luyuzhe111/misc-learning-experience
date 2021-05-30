@@ -1,0 +1,27 @@
+.grid-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-gap: 80px;
+}
+
+.observable-cells-container{
+  margin-top: 27px;
+
+}
+
+.exp{
+  margin-left: 150px;
+}
+
+
+body {
+  padding: 0;
+  margin: 0;
+  font-family: sans-serif; 
+}
+
+code{
+  color:#c7254e;
+  background-color:#f9f2f4;
+  border-radius:4px
+}

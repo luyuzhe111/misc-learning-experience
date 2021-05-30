@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>HighDimVis</title>
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="https://unpkg.com/normalize.css@8.0.1/normalize.css"
+    />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="https://cdn.jsdelivr.net/npm/@observablehq/inspector@3/dist/inspector.css"
+    />
+    <link rel="stylesheet" type="text/css" href="./styles.css" />
+    
+  </head> 
+  <body>
+    <div class="grid-container">
+      <div id="readme" class="exp">
+        <h1 class="code-line" data-line-start=0 data-line-end=1><a id="GSoC_Code_Challenge"></a>HighDimVis Code Challenge</h1>
+          <p class="has-line-data" data-line-start="2" data-line-end="3">In this visualization, I am visualizing results of <strong>applying dimensionality reduction and clustering</strong> on the dataset of <a href="https://github.com/fivethirtyeight/data/tree/master/bob-ross">Bob Ross painting descriptions</a>. Each item in the data corresponds to an individual painting, and its attributes are binary, indicating the presence of a particular landform feature - some natural, others person-made.</p>
+          <p class="has-line-data" data-line-start="4" data-line-end="5"><strong>Specifically, I am visualizing two sets of data.</strong></p>
+          <p class="has-line-data" data-line-start="6" data-line-end="7">The first, <code>pca_data</code>, contains the results of applying principal component analysis (PCA) to this dataset. Associated with the results is an Array of 2D coordinates (<code>projection</code>) formed by projecting the data onto the top 2 principal components, and two Arrays that contain the loadings from PCA (<code>x_loading</code>, <code>y_loading</code>), a quantitative value (property name <code>loading</code>) per attribute (property name <code>attribute</code>).</p>
+          <p class="has-line-data" data-line-start="8" data-line-end="9">The second, <code>kmeans_data</code>, contains the results of applying k-means to this dataset. This is an Array where each item corresponds to a specific painting’s attribute, with the following properties:</p>
+          <ul>
+          <li class="has-line-data" data-line-start="10" data-line-end="11"><code>id</code>: unique identifier for the painting</li>
+          <li class="has-line-data" data-line-start="11" data-line-end="12"><code>attribute</code>: the name of the attribute</li>
+          <li class="has-line-data" data-line-start="12" data-line-end="13"><code>value</code>: 0 or 1, indicating presence of attribute</li>
+          <li class="has-line-data" data-line-start="13" data-line-end="15"><code>label</code>: the cluster label for this painting</li>
+          </ul>
+          <p class="has-line-data" data-line-start="15" data-line-end="16"><strong>This design includes three primary visualizations from the above data: </strong> a scatterplot for PCA projects, a diverging bar plot for PCA loadings, and heatmap for clustering. Moreover, it supports the following <strong>interactions</strong>.</p>
+          <ol>
+          <li class="has-line-data" data-line-start="17" data-line-end="18">
+          <p class="has-line-data" data-line-start="17" data-line-end="18"><strong>Hovering over a circle in the scatterplot</strong> should show the title and image of the episode corresponding to the episode that painting was drawn. Hovering off of the circle should remove the display of the title and the image.</p>
+          </li>
+          <li class="has-line-data" data-line-start="18" data-line-end="20">
+          <p class="has-line-data" data-line-start="18" data-line-end="19"><strong>Selecting a cluster, via clicking</strong>, should highlight the corresponding set of circles that belong to the cluster. Clicking off of a cluster should reset all circles’ appearance to their default. Further, multiple clusters can be selected.</p>
+          </li>
+          <li class="has-line-data" data-line-start="20" data-line-end="21">
+          <p class="has-line-data" data-line-start="20" data-line-end="21"><strong>Allow users to steer dimension reduction using ccPCA</strong>. Upon clicking the <code>run ccPCA</code> button, the method of <a href="https://github.com/takanori-fujiwara/ccpca">contrasting clusters in PCA</a> should be run, using the set of circles that have been highlighted via cluster selection as the target set. The visualization would update accordingly with the results - a new 2D projection, and new loadings. The new projection will show how the highlighted data items <em>contrast</em> from the remainder of the dataset, via their positions in the 2D projection, and the loadings. To this end, I will provide a python server backend to accomplish the computation.</p>
+          </li>
+          </ol>
+      </div>
+
+      <div id="observablehq-69a82f5a" class="observable-cells-container">
+        <div class="observablehq-cell observablehq-viewof-ccpca_button"></div>
+        <div class="observablehq-cell observablehq-plot"></div>
+      </div> 
+
+    </div>
+
+    <script type="module">
+      import {
+        Runtime,
+        Inspector,
+      } from "https://cdn.jsdelivr.net/npm/@observablehq/runtime@4/dist/runtime.js";
+      import define from "https://api.observablehq.com/d/63cb8c1b032f35b1.js?v=3";
+
+      const container = document.querySelector(".observable-cells-container");
+      const containerWidth = () => Math.floor(container.clientWidth - 24 * 2);
+
+      // keep a reference to notebook module
+      const main = new Runtime().module(define, (name) => {
+        if (name === "viewof ccpca_button")
+          return Inspector.into(
+            "#observablehq-69a82f5a .observablehq-viewof-ccpca_button"
+          )();
+        
+        if (name === "plot")
+          return Inspector.into(
+            "#observablehq-69a82f5a .observablehq-plot"
+        )();
+        return ["pca_results","pca_data","projection","x_loading","y_loading","create_scatterplot","sct_x_ext","sct_y_ext","create_x_loading","pca_ld_attr_bottom_scale","pca_x_ld_ext","clst_x_ext","attributes","create_y_loading","pca_ld_attr_right_scale","pca_y_ld_ext","sct_x_scale","sct_y_scale","pca_x_ld_scale","clst_x_scale","pca_y_ld_scale","create_clustering"].includes(name);
+      });
+
+      let resize = 0.8;
+      main.redefine("width", containerWidth() * resize);
+
+    </script>
+  </body>
+</html>
