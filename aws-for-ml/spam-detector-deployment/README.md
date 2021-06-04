@@ -2,11 +2,9 @@
 
 ### This repo contains code I wrote as I followed along [this](https://www.coursera.org/projects/deploy-ml-model-aws-elastic-beanstalk) project on coursera.
 
-<br>
 
 ### Some concepts and technologies I learned include:
 
-<br>
 
 - **Postman**: with which you can test APIs you are developing.
 
