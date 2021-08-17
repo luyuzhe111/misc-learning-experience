@@ -13,8 +13,8 @@ app = dash.Dash(__name__, title='Interactive Model Dashboard', external_styleshe
 df = pd.read_csv('Data/customer_dataset.csv')
 features = ['Fresh', 'Milk', 'Grocery', 'Frozen', 'Detergents_Paper', 'Delicatessen']
 models = ['PCA', 'UMAP', 'AE', 'VAE']
-df_average = ###
-max_val = ###
+df_average = df[features].mean()
+max_val = df[features].max().max()
 
 app.layout = html.Div([
     html.Div([
@@ -27,10 +27,13 @@ app.layout = html.Div([
             dcc.Dropdown(
                 id='crossfilter-model',
                 options=[
-                    ###
+                    {'label': 'Principal Component Analysis', 'value': 'PCA'},
+                    {'label': 'Uniform Manifold Approximation and Projection', 'value': 'UMAP'},
+                    {'label': 'Autoencoder', 'value': 'AE'},
+                    {'label': 'Variational Autoencoder', 'value': 'VAE'}
                 ],
-                ###
-                ###
+                value='PCA',
+                clearable=False
 
             )], style={'width': '49%', 'display': 'inline-block'}
         ),
@@ -44,7 +47,9 @@ app.layout = html.Div([
                 dcc.RadioItems(
                     id='gradient-scheme',
                     options=[
-                        ###
+                        {'label': 'Orange to Red', 'value': 'OrRd'},
+                        {'label': 'Viridis', 'value': 'Viridis'},
+                        {'label': 'Plasma', 'value': 'Plasma'}
                     ],
                     value='Plasma',
                     labelStyle={'float': 'right', 'display': 'inline-block', 'margin-right': 10}
@@ -53,7 +58,7 @@ app.layout = html.Div([
             
             dcc.Dropdown(
                 id='crossfilter-feature',
-                options=###
+                options=[{'label': i, 'value': i} for i in features + ['None', 'Region', 'Channel', 'Total_Spend']],
                 value='None',
                 clearable=False
             )], style={'width': '49%', 'float': 'right', 'display': 'inline-block'}
@@ -64,7 +69,7 @@ app.layout = html.Div([
     html.Div([
 
         dcc.Graph(
-            id=###
+            id='scatter-plot',
             hoverData={'points': [{'customdata': 0}]}
         )
 
@@ -79,21 +84,82 @@ app.layout = html.Div([
 
 
 @app.callback(
-    ###
+    dash.dependencies.Output('scatter-plot', 'figure'),
+    [
+        dash.dependencies.Input('crossfilter-feature', 'value'),
+        dash.dependencies.Input('crossfilter-model', 'value'),
+        dash.dependencies.Input('gradient-scheme', 'value')
+    ]
 )
 def update_graph(feature, model, gradient):
-    return None
+    if feature == 'None':
+        cols = None
+        sizes = None
+        hover_names = [f'Customer {idx}' for idx in df.index]
+    elif feature in ['Region', 'Channel']:
+        cols = df[feature].astype(str)
+        sizes = None
+        hover_names = [f'Customer {idx}' for idx in df.index]
+    else:
+        cols = df[feature]
+        sizes = df[feature]
+        hover_names = []
+        for ix, val in zip(df.index.values, df[feature].values):
+            hover_names.append(f'Customer {ix}<br>{feature} value of {val}')
+    fig = px.scatter(
+        df, 
+        x=df[f'{model.lower()}_x'],
+        y=df[f'{model.lower()}_y'],
+        opacity=0.8,
+        template='plotly_dark',
+        color_continuous_scale=gradient,
+        hover_name=hover_names,
+        color=cols,
+        size=sizes
+    )
+
+    fig.update_traces(customdata=df.index)
+    fig.update_layout(
+        height=450,
+        hovermode='closest',
+        margin={'l': 20, 'b': 30, 'r': 10, 't': 10},
+        template='plotly_dark'
+    )
+    fig.update_xaxes(showticklabels=False)
+    fig.update_yaxes(showticklabels=False)
+    return fig
 
 
 def create_point_plot(df, title):
-    return None
+    fig = go.Figure(
+        data=[
+            go.Bar(name='Average', x=features, y=df_average.values, marker_color='#c178f6'),
+            go.Bar(name=title, x=features, y=df.values, marker_color='#89efbd')
+        ]
+    )
+
+    fig.update_layout(
+        barmode='group',
+        height=300,
+        margin={'l': 20, 'b': 30, 'r': 10, 't': 10},
+        template='plotly_dark'
+    )
+
+    fig.update_yaxes(type='log', range=[0, 5])
+    return fig
 
 
 @app.callback(
-    ###
+    dash.dependencies.Output('point-plot', 'figure'),
+    [
+        dash.dependencies.Input('scatter-plot', 'hoverData')
+    ]
+
 )
 def update_point_plot(hoverData):
-    return None
+    index = hoverData['points'][0]['customdata']
+    title = f'Customer {index}'
+    return create_point_plot(df[features].iloc[index], title)
 
 
 if __name__ == '__main__':
